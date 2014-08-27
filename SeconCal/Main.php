@@ -52,7 +52,7 @@
                     $(this).draggable({
                         zIndex: 999,
                         revert: true, // will cause the event to go back to its
-                        revertDuration: 0  //  original position after the drag
+                        revertDuration :0  //  original position after the drag
                     });
                 });
                 $('#calendar').fullCalendar({
@@ -63,7 +63,7 @@
                     },
                     editable: true,
                     defaultView: 'basicWeek',
-                    //theme: true,
+                    theme: true,
                     height: $("#external-events").height(),
                     droppable: true, // this allows things to be dropped onto the calendar !!!
                     drop: function(date) { // this function is called when something is dropped
@@ -71,7 +71,7 @@
                         var copiedEventObject = $.extend({}, originalEventObject);
                         var nam = copiedEventObject.title;
                         var sss = moment(date);
-                        var end = sss.add('d', 1);
+                        var end = sss.add(1,'d');
                         $('#openModal input:checkbox').each(function() {
                             this.checked = false;
                         });
@@ -86,9 +86,8 @@
                         inc = inc + 1;
                         newWindow.id = inc;
                         newWindow.date = date;
-                        window.mode = 1;
                         copiedEventObject.id = inc;
-
+                        copiedEventObject.end = end;
 
                         $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
 
@@ -679,20 +678,20 @@ mysqli_close($con1);
                 {
 
                     var aa = window.id;
-                    var ar = $('#calendar').fullCalendar('clientEvents', aa);
                     var tit = document.getElementById('name').value;
                     var stat = document.getElementById('status');
                     var startdate = document.getElementById('startDate').value;
                     var end = document.getElementById('endDate').value;
                     var des = document.getElementById('Summary').value;
                     var col = stat.options[stat.selectedIndex].value;
-
-
-                    ar[0].title = tit;
-                    ar[0].color = col;
-                    ar[0].desc = des;
-                    ar[0].start = startdate;
-                    ar[0].end = moment(end);
+                    var neweventobject = {
+                        title: tit,
+                        start: startdate,
+                        end: end,
+                        color: col,
+                        id: aa,
+                        desc: des
+                    }
                     var status;
                     if (col == '#FFA500')
                     {
@@ -706,26 +705,23 @@ mysqli_close($con1);
                     {
                         status = 'Done';
                     }
-
-
-
-                    $('#calendar').fullCalendar('updateEvent', ar[0]);
+                    $('#calendar').fullCalendar('removeEvents', aa);
+                    $('#calendar').fullCalendar('renderEvent', neweventobject, true);
                     var ar2 = $('#calendar').fullCalendar('clientEvents', aa);
                     alert(ar2[0].end);
-                    var tstart = ar[0].start.format('YYYY-MM-DD');
-                    var tempdep;
+                    var tstart = start;
                     $.ajax({
                         type: "POST",
                         url: 'hhhh.php',
                         dataType: 'json',
                         async: false,
-                        data: {title: ar[0].title,
+                        data: {title: tit,
                             end: end,
-                            desc: ar[0].desc,
+                            desc: des,
                             cal: 'calendar',
                             start: tstart,
                             status: status,
-                            id: ar[0].id
+                            id: aa
                         },
                         complete: function(response) {
                             //$('#output').html(response.responseText);
@@ -738,10 +734,10 @@ mysqli_close($con1);
                     });
                     var eventObject = {
                         title: tit,
-                        start: ar[0].start,
-                        end: ar[0].end,
+                        start: start,
+                        end: end,
                         color: '#ff0000',
-                        id: ar[0].id,
+                        id: aa,
                         desc: des
                     };
                     var selected = [];
@@ -751,7 +747,7 @@ mysqli_close($con1);
 
                     for (j = 0; j < cals.length; j++)
                     {
-                        $(cals[j]).fullCalendar('removeEvents', ar[0].id);
+                        $(cals[j]).fullCalendar('removeEvents', aa);
                     }
                     for (i = 0; i < selected.length; i++)
                     {
@@ -762,13 +758,13 @@ mysqli_close($con1);
                             url: 'hhhh.php',
                             dataType: 'json',
                             async: false,
-                            data: {title: ar[0].title,
+                            data: {title: tit,
                                 end: end,
-                                desc: ar[0].desc,
+                                desc: des,
                                 cal: selected[i],
                                 start: tstart,
                                 status: status,
-                                id: ar[0].id
+                                id: aa
                             },
                             complete: function(response) {
                                 //$('#output').html(response.responseText);
