@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8' />
+        <link href='../fullcalendar.css' rel='stylesheet' />
+        <link href='../fullcalendar.print.css' rel='stylesheet' media='print' />
+        <script src='../lib/moment.min.js'></script>
+        <script src='../lib/jquery.min.js'></script>
+        <script src='../lib/jquery-ui.custom.min.js'></script>
+        <script src='../fullcalendar.min.js'></script>
+        <script>
+            var inc = 0;
+            $(document).ready(function() {
+
+
+                /* initialize the external events
+                 -----------------------------------------------------------------*/
+
+                $('#external-events div.external-event').each(function() {
+
+
+                    // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                    // it doesn't need to have a start or end
+                    var eventObject = {
+                        title: $.trim($(this).text()) // use the element's text as the event title
+
+                    };
+                    // store the Event Object in the DOM element so we can get to it later
+                    $(this).data('eventObject', eventObject);
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        zIndex: 999,
+                        revert: true, // will cause the event to go back to its
+                        revertDuration: 0  //  original position after the drag
+                    });
+                });
+                /* initialize the calendar
+                 -----------------------------------------------------------------*/
+
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: '',
+                        center: '',
+                        right: 'title'
+                    },
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 200,
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        var newWindow = window.open("#openModal", "_self");
+
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        //alert("TEsting");
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        inc = inc + 1;
+                        newWindow.id = inc;
+                        newWindow.date = date;
+
+                        copiedEventObject.id = inc;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+                        if ($('#drop-remove').is(':checked')) {
+                            // if so, remove the element from the "Draggable Events" list
+                            $(this).remove();
+                        }
+
+                    },
+                    eventClick: function(calEvent, jsEvent, view) {
+                        var newWindow = window.open("#openModal", "_self");
+                        newWindow.id = calEvent.id;
+                    },
+                    eventDrop: function(event, delta, revertFunc) {
+                        var cals1 = ["#ebuisness", "#norton", "#smb", "#abs", "#symc", "#sympay", "#part", "#velocity", "#et", "#new"];
+                        //alert(event.id);
+                        for (k = 0; k < cals1.length; k++)
+                        {
+                            var eve = $(cals1[k]).fullCalendar('clientEvents');
+                            if (eve.length != 0)
+                            {
+                                for (l = 0; l < eve.length; l++)
+                                {
+                                    if (eve[l].id == event.id)
+                                    {
+                                        //alert(event.start);
+                                        eve[l].start = event.start;
+                                        eve[l].end = event.end;
+                                        $(cals1[k]).fullCalendar('updateEvent', eve[l]);
+                                    }
+                                }
+                            }
+
+                            //eve.start = event.start;
+                            //eve.end = event.start;
+                            //$(cals1[k]).fullCalendar('updateEvent', eve);
+
+
+                        }
+                    }
+                });
+                $('#ebuisness').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#ebuisness').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+                $('#norton').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#norton').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+                $('#smb').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#smb').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+                $('#abs').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#abs').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+                $('#symc').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#symc').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+                $('#sympay').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#sympay').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+
+                $('#part').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#part').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+                $('#velocity').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#velocity').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+                $('#et').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#et').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+                $('#new').fullCalendar({
+                    header: false,
+                    editable: true,
+                    defaultView: 'basicWeek',
+                    height: 51,
+                    columnFormat: '',
+                    droppable: true, // this allows things to be dropped onto the calendar !!!
+                    drop: function(date) { // this function is called when something is dropped
+
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#new').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+
+
+                    }
+                });
+
+            });</script>
+        <style>
+            .modalDialog {
+                position: fixed;
+                font-family: Arial, Helvetica, sans-serif;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba(0,0,0,0.8);
+                z-index: 99999;
+                opacity:0;
+                -webkit-transition: opacity 400ms ease-in;
+                -moz-transition: opacity 400ms ease-in;
+                transition: opacity 400ms ease-in;
+                pointer-events: none;
+            }
+            .modalDialog:target {
+                opacity:1;
+                pointer-events: auto;
+            }
+
+            .modalDialog > div {
+                width: 450px;
+                position: relative;
+                margin: 10% auto;
+                padding: 5px 20px 13px 20px;
+                border-radius: 10px;
+                background: #fff;
+                background: -moz-linear-gradient(#fff, #999);
+                background: -webkit-linear-gradient(#fff, #999);
+                background: -o-linear-gradient(#fff, #999);
+            }
+
+            .close {
+                background: #606061;
+                color: #FFFFFF;
+                line-height: 25px;
+                position: absolute;
+                right: -12px;
+                text-align: center;
+                top: -10px;
+                width: 24px;
+                text-decoration: none;
+                font-weight: bold;
+                -webkit-border-radius: 12px;
+                -moz-border-radius: 12px;
+                border-radius: 12px;
+                -moz-box-shadow: 1px 1px 3px #000;
+                -webkit-box-shadow: 1px 1px 3px #000;
+                box-shadow: 1px 1px 3px #000;
+            }
+
+            .close:hover { background: #00d9ff; }
+
+        </style>
+        <style>
+
+            body {
+                margin-top: 40px;
+                text-align: center;
+                font-size: 14px;
+                font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+            }
+
+
+
+            #external-events {
+                float: left;
+                width: 150px;
+                padding: 0 10px;
+                border: 1px solid #ccc;
+                background: #eee;
+                text-align: left;
+            }
+
+            #external-events h4 {
+                font-size: 16px;
+                margin-top: 0;
+                padding-top: 1em;
+            }
+
+            .external-event { /* try to mimick the look of a real event */
+                margin: 10px 0;
+                padding: 2px 4px;
+                background: #000000;
+                color: #fff;
+                font-size: .85em;
+                cursor: pointer;
+            }
+
+            #external-events p {
+                margin: 1.5em 0;
+                font-size: 11px;
+                color: #666;
+            }
+            #external-events p input {
+                margin: 0;
+                vertical-align: middle;
+            }
+            // #calendar {
+            //   float: right;
+            // width: 900px;
+            //}
+            .call{
+                float: right;
+                width: 900px;
+            }
+            //  #norton {
+            //    float: right;
+            //  width: 900px;
+            //}
+            // #ebuisness {
+            //   float: right;
+            // width: 900px;
+            //}
+            #id1 {
+                float: left;
+                width: 150px;
+                padding: 0 10px;
+                text-align: right;
+            }
+            .heee{
+                float: left;
+                width: 150px;
+                padding: 0 10px;
+                text-align: right;
+            }
+            #id2 {
+                float: left;
+                width: 150px;
+                padding: 0 10px;
+                text-align: right;
+            }
+            .wrapper{
+                width: 1100px;
+                margin: 0 auto;
+            }
+            .dum{
+                float: left;
+                width: 200px;
+                height: 100px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div  class="wrapper">
+           
+            <div id='external-events'>
+                <h4>Events</h4>
+                <div class='external-event' >My Event 1</div>
+                <p>
+                    <!--<input type='checkbox' id='drop-remove' />
+                    <label for='drop-remove'>remove after drop</label>-->
+                </p>
+            </div>
+            <div style="float:left; margin-left: 30px;"><button id='left'><</button><button id='right'>></button></div>
+            <div id='calendar' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper" >
+            <div>
+                <div class="heee"><h3>E-Store</h3></div>
+            </div>
+            <div id='ebuisness' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper">
+            <div>
+                <div class="heee"><h3>Norton.com</h3></div>
+            </div>
+            <div id='norton' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper">
+            <div>
+                <div class="heee"><h3>SMB</h3></div>
+            </div>
+            <div id='smb' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper">
+            <div>
+                <div class="heee"><h3>ABS</h3></div>
+            </div>
+            <div id='abs' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper">
+            <div>
+                <div class="heee"><h3>Symantec.com</h3></div>
+            </div>
+            <div id='symc' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper">
+            <div>
+                <div class="heee"><h3>SYMPAY</h3></div>
+            </div>
+            <div id='sympay' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper">
+            <div>
+                <div class="heee"><h3>PartnerNet</h3></div>
+            </div>
+            <div id='part' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper">
+            <div>
+                <div class="heee"><h3>Velocity</h3></div>
+            </div>
+            <div id='velocity' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper">
+            <div>
+                <div class="heee"><h3>ETrack</h3></div>
+            </div>
+            <div id='et' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <div  class="wrapper">
+            <div>
+                <div class="heee"><h3>New Platform</h3></div>
+            </div>
+            <div id='new' class="call"></div>
+            <div style='clear:both'></div>
+        </div>
+        <script>
+            $('#right').click(function() {
+
+                $('#calendar').fullCalendar('next');
+                $('#ebuisness').fullCalendar('next');
+                $('#norton').fullCalendar('next');
+                $('#smb').fullCalendar('next');
+                $('#abs').fullCalendar('next');
+                $('#symc').fullCalendar('next');
+                $('#sympay').fullCalendar('next');
+                $('#part').fullCalendar('next');
+                $('#velocity').fullCalendar('next');
+                $('#et').fullCalendar('next');
+                $('#new').fullCalendar('next');
+
+            });
+            $('#left').click(function() {
+                $('#calendar').fullCalendar('prev');
+                $('#ebuisness').fullCalendar('prev');
+                $('#norton').fullCalendar('prev');
+                $('#smb').fullCalendar('prev');
+                $('#abs').fullCalendar('prev');
+                $('#symc').fullCalendar('prev');
+                $('#sympay').fullCalendar('prev');
+                $('#part').fullCalendar('prev');
+                $('#velocity').fullCalendar('prev');
+                $('#et').fullCalendar('prev');
+                $('#new').fullCalendar('prev');
+            });</script>
+        <div id="openModal" class="modalDialog">
+            <div>
+                <a id="close" title="Close" class="close">X</a>
+                <h2>CAB Details</h2>
+                <form>
+                    <table width ="100%">
+                        <tr><td width ="30%" align="left"><label for="name">Name</label></td><td align="left" width ="70%"><input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all"></td></tr>
+                        <tr><td align="left"><label for="status">Status</label></td><td align="left"><select id ="status" name = "status">
+                                    <option value ="#FFA500" >Tentative</option>
+                                    <option value = "#008000">Approved</option>
+                                    <option value="#808080">Complete</option>
+                                </select></td></tr>
+
+                        <tr><td align="left"><label for="endDate">End Date</label></td><td align="left"> <input type="date" name="endDate" id="endDate" value="" class="text ui-widget-content ui-corner-all"></td></tr>
+
+                        <tr><td align="left"><label for="Summary">Summary</label></td><td align="left"> <textarea rows="4" cols="30" name="Summary" id="Summary" class="text ui-widget-content ui-corner-all"></textarea></td></tr>
+                        <tr><td align="left"><label for="impact">Impact</label></td><td align="left">
+                                <input type="checkbox" name="none" value="none">None
+                                <input type="checkbox" name="ebuisness" value="eStore">eStore
+                                <input type="checkbox" name="norton" value="norton.com">norton.com
+                                <input type="checkbox" name="smb" value="SMB">SMB<br>
+                                <input type="checkbox" name="abs" value="ABS">ABS
+                                <input type="checkbox" name="symc" value="Symantec.com">Symantec.com
+                                <input type="checkbox" name="part" value="PartnerNet">PartnerNet<br>
+                                <input type="checkbox" name="sympay" value="Sympay">Sympay
+                                <input type="checkbox" name="velocity" value="Velocity">Velocity
+                                <input type="checkbox" name="et" value="Unspecified Track">Unspecified Track<br>
+                                <input type="checkbox" name="new" value="New Platform">New Platform 
+                            </td></tr>
+                    </table>
+                    <input type="button" value="Submit" id="subb">
+                </form>
+            </div>
+        </div>
+        <script>
+            $("#subb").click(function(theForm) {
+                //value = /* get some value */
+                var ar = $('#calendar').fullCalendar('clientEvents');
+                var aa = window.id;
+                var tit = document.getElementById('name').value;
+                var stat = document.getElementById('status');
+                var end = document.getElementById('endDate').value;
+                var col = stat.options[stat.selectedIndex].value;
+                var cals = ["#ebuisness", "#norton", "#smb", "#abs", "#symc", "#sympay", "#part", "#velocity", "#et", "#new"];
+                aa = aa - 1;
+                ar[aa].title = tit;
+                ar[aa].color = col;
+                //alert(end);
+                if (end != "")
+                {
+                    //alert('reached');
+                    ar[aa].end = end;
+                }
+                var eventObject = {
+                    title: tit,
+                    start: ar[aa].start,
+                    end: ar[aa].end,
+                    color: '#ff0000',
+                    id: ar[aa].id
+                };
+                var selected = [];
+                $('#openModal input:checked').each(function() {
+                    selected.push($(this).attr('name'));
+                });
+                for (j = 0; j < cals.length; j++)
+                {
+                    $(cals[j]).fullCalendar('removeEvents', ar[aa].id);
+                }
+                for (i = 0; i < selected.length; i++)
+                {
+                    var temp = '#'.concat(selected[i]);
+
+                    $(temp).fullCalendar('renderEvent', eventObject, true);
+                }
+                //alert(selected[0]);
+
+
+                //$('#calendar').fullCalendar( 'refetchEvents' );
+                //window.opener.$("#myform .somehiddenfield").val(value);
+                //window.opener.$("#myform").submit();
+                $('#calendar').fullCalendar('updateEvent', ar[aa]);
+                window.open("#close", "_self");
+            });
+            
+            
+            $("#close").click(function() {
+                //alert('complete');
+                var id = window.id;
+                $("#calendar").fullCalendar('removeEvents',id);
+                //$("#calender").fullCalendar( 'rerenderEvents' )
+                //alert('sucess');
+                window.open("#close", "_self");
+            });
+            //reason += validateName(theForm.name);
+            //reason += validatePhone(theForm.phone);
+            //reason += validateEmail(theForm.emaile);
+        </script>
+    </body>
+</html>
